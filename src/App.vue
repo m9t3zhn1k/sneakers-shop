@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from './components/Header.vue'
 import CardList from './components/CardList.vue'
-import Drawer from './components/Drawer.vue'
+/* import Drawer from './components/Drawer.vue' */
 </script>
 
 <template>
@@ -11,13 +11,20 @@ import Drawer from './components/Drawer.vue'
       <div class="flex flex-col gap-6">
         <div class="flex justify-between gap-4">
           <h2 class="text-3xl font-bold">Все кроссовки</h2>
-          <span>input</span>
+          <div class="relative">
+            <img class="absolute top-3 left-3 w-4 h-4" src="/search.svg" />
+            <input
+              class="border border-slate-300 rounded-lg py-2 px-4 pl-10 outline-none duration-300 focus:border-slate-400"
+              type="text"
+              placeholder="Поиск..."
+            />
+          </div>
         </div>
         <CardList />
       </div>
     </div>
   </div>
-  <Drawer>
+  <!-- <Drawer>
     <div class="absolute flex flex-col gap-4 bg-white w-96 h-full right-0 p-6 opacity-100">
       <div class="flex justify-between gap-2">
         <h2 class="text-2xl font-semibold">Корзина</h2>
@@ -57,7 +64,7 @@ import Drawer from './components/Drawer.vue'
         </button>
       </div>
     </div>
-  </Drawer>
+  </Drawer> -->
 </template>
 
 <style scoped></style>
