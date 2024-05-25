@@ -8,13 +8,19 @@
       </div>
     </div>
     <ul class="flex items-center gap-6">
-      <li class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal hover:text-black">
+      <li
+        class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"
+      >
         <img src="/cart.svg" alt="Logo" /> 1205 руб.
       </li>
-      <li class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal">
+      <li
+        class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"
+      >
         <img src="/heart.svg" alt="Logo" /> Закладки.
       </li>
-      <li class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal">
+      <li
+        class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"
+      >
         <img src="/profile.svg" alt="Logo" /> Профиль
       </li>
     </ul>
