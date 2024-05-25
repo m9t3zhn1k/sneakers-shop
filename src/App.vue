@@ -9,15 +9,24 @@ import CardList from './components/CardList.vue'
     <Header />
     <div class="p-10">
       <div class="flex flex-col gap-6">
-        <div class="flex justify-between gap-4">
+        <div class="flex justify-between gap-4 items-center">
           <h2 class="text-3xl font-bold">Все кроссовки</h2>
-          <div class="relative">
-            <img class="absolute top-3 left-3 w-4 h-4" src="/search.svg" />
-            <input
-              class="border border-slate-300 rounded-lg py-2 px-4 pl-10 outline-none duration-300 focus:border-slate-400"
-              type="text"
-              placeholder="Поиск..."
-            />
+          <div class="flex gap-3 items-center">
+            <select
+              class="border w-60 border-slate-300 rounded-lg py-2 px-4 outline-none duration-300 focus:border-slate-400"
+            >
+              <option>По названию</option>
+              <option>По цене (по возрастанию)</option>
+              <option>По цене (по убыванию)</option>
+            </select>
+            <div class="relative">
+              <img class="absolute top-3 left-3 w-4 h-4" src="/search.svg" />
+              <input
+                class="border w-60 border-slate-300 rounded-lg py-2 px-4 pl-10 outline-none duration-300 focus:border-slate-400"
+                type="text"
+                placeholder="Поиск..."
+              />
+            </div>
           </div>
         </div>
         <CardList />
