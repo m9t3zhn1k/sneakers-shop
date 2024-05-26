@@ -1,32 +1,36 @@
 <script setup lang="ts">
 import { onMounted, reactive, type Ref, ref, watch } from 'vue'
-import axios from 'axios'
-import { z } from 'zod'
 import Shell from '@/modules/shell/Shell.vue'
-import { Select, Input, ProductCardList, Product, productSchema } from '@shared'
+import {
+  Select,
+  Input,
+  ProductCardList,
+  Product,
+  ProductsService,
+  ProductsIndexRequest,
+} from '@shared'
 /* import Drawer from './components/Drawer.vue' */
 
+const productsService = new ProductsService()
 const products: Ref<Product[]> = ref([])
 const filters = reactive({
   search: '',
   sortBy: '',
 })
 
-onMounted(() => {
-  axios
-    .get('https://134a975d718e62e6.mokky.dev/products')
-    .then(response => (products.value = z.array(productSchema).parse(response.data)))
-    .catch(console.log)
-})
+onMounted(() =>
+  productsService
+    .index(convertToProductsIndexRequest())
+    .then(response => (products.value = response))
+    .catch(console.log),
+)
 
-watch(filters, () => {
-  axios
-    .get(
-      `https://134a975d718e62e6.mokky.dev/products?title=*${filters.search}*&sortBy=${filters.sortBy}`,
-    )
-    .then(response => (products.value = z.array(productSchema).parse(response.data)))
-    .catch(console.log)
-})
+watch(filters, () =>
+  productsService
+    .index(convertToProductsIndexRequest())
+    .then(response => (products.value = response))
+    .catch(console.log),
+)
 
 function onSearchChange(event: Event): void {
   const value = (event.target as HTMLInputElement).value
@@ -36,6 +40,10 @@ function onSearchChange(event: Event): void {
 function onSortByChange(event: Event): void {
   const value = (event.target as HTMLSelectElement).value
   filters.sortBy = value
+}
+
+function convertToProductsIndexRequest(): ProductsIndexRequest {
+  return new ProductsIndexRequest({ search: filters.search, sortBy: filters.sortBy })
 }
 </script>
 
