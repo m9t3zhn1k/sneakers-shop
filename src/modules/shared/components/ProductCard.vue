@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Product } from '@/models'
+import { Product } from '@shared/models'
 
 defineProps({
   product: Product,

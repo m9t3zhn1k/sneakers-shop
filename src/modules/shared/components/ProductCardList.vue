@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import Card from './Card.vue'
-import { Product } from '@/models'
+import { Product, ProductCard } from '@shared'
 
 const product: Product = new Product(
   '123',
@@ -14,6 +13,6 @@ const product: Product = new Product(
 
 <template>
   <div class="grid grid-cols-4 gap-3">
-    <Card :product="product" />
+    <ProductCard :product="product" />
   </div>
 </template>
