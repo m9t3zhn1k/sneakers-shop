@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export class Product {
   constructor(
     /**
@@ -31,3 +33,10 @@ export class Product {
     public readonly isInCart: boolean,
   ) {}
 }
+
+export const productSchema = z
+  .object({ id: z.string(), imageUrl: z.string(), price: z.number(), title: z.string() })
+  .transform(
+    product =>
+      new Product(product.id, product.title, product.price, product.imageUrl, false, false),
+  )

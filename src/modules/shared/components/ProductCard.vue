@@ -8,7 +8,7 @@ defineProps({
 
 <template>
   <article
-    class="relative flex flex-col gap-3 border border-slate-100 bg-white rounded-2xl max-w-60 p-3 cursor-pointer duration-300 hover:shadow-lg"
+    class="relative flex flex-col gap-3 border border-slate-100 bg-white rounded-2xl max-w-60 p-3 cursor-pointer duration-300 hover:shadow-lg hover:-translate-y-1"
   >
     <img
       class="absolute t-0 l-0"
@@ -16,7 +16,7 @@ defineProps({
       alt="Like icon"
     />
     <img :src="product.preview" alt="Sneaker" />
-    <p>{{ product.title }}</p>
+    <p class="grow">{{ product.title }}</p>
     <div class="flex justify-between items-center gap-6">
       <div class="flex flex-col">
         <span class="text-slate-500">Цена:</span>
