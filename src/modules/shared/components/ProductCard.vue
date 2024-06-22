@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Product } from '@shared/models'
+import { Product } from '../models'
 
 defineProps({
   product: Product,
@@ -14,7 +14,7 @@ defineProps({
       class="absolute t-0 l-0"
       :src="product.isFavorite ? '/like-2.svg' : '/like-1.svg'"
       alt="Like icon"
-      @click="$emit('toggleFavorite')"
+      @click.stop="$emit('toggleFavorite')"
     />
     <img :src="product.preview" alt="Sneaker" />
     <p class="grow">{{ product.title }}</p>
