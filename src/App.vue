@@ -59,7 +59,7 @@ function convertToProductsIndexRequest(): ProductsIndexRequest {
     <ProductCardList :products="products" />
   </Shell>
 
-  <Drawer>
+  <Drawer v-if="false">
     <template v-slot:header>
       <h2 class="text-2xl font-semibold">Корзина</h2>
     </template>
