@@ -35,8 +35,21 @@ export class Product {
 }
 
 export const productSchema = z
-  .object({ id: z.string(), imageUrl: z.string(), price: z.number(), title: z.string() })
+  .object({
+    id: z.string(),
+    imageUrl: z.string(),
+    price: z.number(),
+    title: z.string(),
+    favorite: z.boolean(),
+  })
   .transform(
     product =>
-      new Product(product.id, product.title, product.price, product.imageUrl, false, false),
+      new Product(
+        product.id,
+        product.title,
+        product.price,
+        product.imageUrl,
+        product.favorite,
+        false,
+      ),
   )
