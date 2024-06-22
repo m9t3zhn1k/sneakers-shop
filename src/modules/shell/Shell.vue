@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Header } from './components'
-/* import Drawer from './components/Drawer.vue' */
 </script>
 
 <template>
