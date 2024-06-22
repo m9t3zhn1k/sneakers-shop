@@ -36,7 +36,7 @@ export class Product {
 
 export const productSchema = z
   .object({
-    id: z.string(),
+    id: z.number().transform(String),
     imageUrl: z.string(),
     price: z.number(),
     title: z.string(),

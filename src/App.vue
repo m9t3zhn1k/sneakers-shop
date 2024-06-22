@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, type Ref, ref, watch } from 'vue'
+import { onMounted, reactive, type Ref, ref, watch, toRaw } from 'vue'
 import Shell from '@/modules/shell/Shell.vue'
 import {
   Select,
@@ -9,6 +9,7 @@ import {
   ProductsService,
   ProductsIndexRequest,
   Drawer,
+  ProductsToggleFavoriteRequest,
 } from '@shared'
 
 const productsService = new ProductsService()
@@ -42,8 +43,23 @@ function onSortByChange(event: Event): void {
   filters.sortBy = value
 }
 
+function toggleProductFavorite(product: Product): void {
+  productsService
+    .toggleFavorite(convertToProductsToggleFavoriteRequest(product))
+    .then(
+      response =>
+        (products.value = [
+          ...products.value.map(item => (item.id !== product.id ? item : response)),
+        ]),
+    )
+}
+
 function convertToProductsIndexRequest(): ProductsIndexRequest {
   return new ProductsIndexRequest({ search: filters.search, sortBy: filters.sortBy })
+}
+
+function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggleFavoriteRequest {
+  return new ProductsToggleFavoriteRequest(product.id, !product.isFavorite)
 }
 </script>
 
@@ -56,7 +72,7 @@ function convertToProductsIndexRequest(): ProductsIndexRequest {
         <Input @input="onSearchChange" />
       </div>
     </div>
-    <ProductCardList :products="products" />
+    <ProductCardList :products="products" @toggle-favorite="toggleProductFavorite" />
   </Shell>
 
   <Drawer v-if="false">

@@ -14,6 +14,7 @@ defineProps({
       class="absolute t-0 l-0"
       :src="product.isFavorite ? '/like-2.svg' : '/like-1.svg'"
       alt="Like icon"
+      @click="$emit('toggleFavorite')"
     />
     <img :src="product.preview" alt="Sneaker" />
     <p class="grow">{{ product.title }}</p>
