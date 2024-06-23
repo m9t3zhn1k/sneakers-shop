@@ -1,3 +1,11 @@
+<script setup lang="ts">
+const emits = defineEmits(['cartOpen'])
+
+function emitCartOpen(): void {
+  emits('cartOpen')
+}
+</script>
+
 <template>
   <header class="flex justify-between border-b border-slate-200 p-8">
     <div class="flex items-center gap-4">
@@ -10,6 +18,7 @@
     <ul class="flex items-center gap-6">
       <li
         class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"
+        @click="emitCartOpen()"
       >
         <img src="/cart.svg" alt="Logo" /> 1205 руб.
       </li>

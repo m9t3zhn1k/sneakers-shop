@@ -18,7 +18,7 @@ function emitToggleFavorite(product: Product): void {
       v-for="product in products"
       :key="product.id"
       :product="product"
-      @toggleFavorite="emitToggleFavorite(product)"
+      @toggle-favorite="emitToggleFavorite(product)"
     />
   </div>
 </template>

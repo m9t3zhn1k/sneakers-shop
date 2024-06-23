@@ -17,6 +17,9 @@ export class ProductsService {
       .then(response => z.array(productSchema).parse(response.data))
   }
 
+  /**
+   * Toggles favorite boolean value for specified product.
+   */
   public toggleFavorite(request: ProductsToggleFavoriteRequest): Promise<Product> {
     const body = request.getBody()
 

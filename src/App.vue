@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, type Ref, ref, watch, toRaw } from 'vue'
+import { onMounted, reactive, type Ref, ref, watch, toRaw, provide } from 'vue'
 import Shell from '@/modules/shell/Shell.vue'
 import {
   Select,
@@ -18,6 +18,7 @@ const filters = reactive({
   search: '',
   sortBy: 'title',
 })
+const isCartOpen = ref(false)
 
 onMounted(() =>
   productsService
@@ -54,6 +55,10 @@ function toggleProductFavorite(product: Product): void {
     )
 }
 
+function toggleCartOpen(): void {
+  isCartOpen.value = !isCartOpen.value
+}
+
 function convertToProductsIndexRequest(): ProductsIndexRequest {
   return new ProductsIndexRequest({ search: filters.search, sortBy: filters.sortBy })
 }
@@ -61,6 +66,8 @@ function convertToProductsIndexRequest(): ProductsIndexRequest {
 function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggleFavoriteRequest {
   return new ProductsToggleFavoriteRequest(product.id, !product.isFavorite)
 }
+
+provide('toggleCartOpen', toggleCartOpen)
 </script>
 
 <template>
@@ -72,10 +79,10 @@ function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggl
         <Input @input="onSearchChange" />
       </div>
     </div>
-    <ProductCardList :products="products" @toggleFavorite="toggleProductFavorite" />
+    <ProductCardList :products="products" @toggle-favorite="toggleProductFavorite" />
   </Shell>
 
-  <Drawer v-if="false">
+  <Drawer v-if="isCartOpen">
     <template v-slot:header>
       <h2 class="text-2xl font-semibold">Корзина</h2>
     </template>
