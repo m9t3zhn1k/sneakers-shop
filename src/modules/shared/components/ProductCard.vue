@@ -4,6 +4,12 @@ import { Product } from '../models'
 defineProps({
   product: Product,
 })
+
+const emits = defineEmits(['toggleFavorite'])
+
+function emitToggleFavorite(): void {
+  emits('toggleFavorite')
+}
 </script>
 
 <template>
@@ -14,9 +20,9 @@ defineProps({
       class="absolute t-0 l-0"
       :src="product.isFavorite ? '/like-2.svg' : '/like-1.svg'"
       alt="Like icon"
-      @click.stop="$emit('toggleFavorite')"
+      @click.stop="emitToggleFavorite()"
     />
-    <img :src="product.preview" alt="Sneaker" />
+    <img class="aspect-square" :src="product.preview" alt="Sneaker" />
     <p class="grow">{{ product.title }}</p>
     <div class="flex justify-between items-center gap-6">
       <div class="flex flex-col">

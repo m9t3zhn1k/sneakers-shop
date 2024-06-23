@@ -16,7 +16,7 @@ const productsService = new ProductsService()
 const products: Ref<Product[]> = ref([])
 const filters = reactive({
   search: '',
-  sortBy: '',
+  sortBy: 'title',
 })
 
 onMounted(() =>
@@ -72,7 +72,7 @@ function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggl
         <Input @input="onSearchChange" />
       </div>
     </div>
-    <ProductCardList :products="products" @toggle-favorite="toggleProductFavorite" />
+    <ProductCardList :products="products" @toggleFavorite="toggleProductFavorite" />
   </Shell>
 
   <Drawer v-if="false">

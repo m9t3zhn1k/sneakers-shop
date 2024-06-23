@@ -4,6 +4,12 @@ import { Product, ProductCard } from '@shared'
 defineProps({
   products: Array<Product>,
 })
+
+const emits = defineEmits(['toggleFavorite'])
+
+function emitToggleFavorite(product: Product): void {
+  emits('toggleFavorite', product)
+}
 </script>
 
 <template>
@@ -12,7 +18,7 @@ defineProps({
       v-for="product in products"
       :key="product.id"
       :product="product"
-      @toggle-favorite="$emit('toggleFavorite', product)"
+      @toggleFavorite="emitToggleFavorite(product)"
     />
   </div>
 </template>
