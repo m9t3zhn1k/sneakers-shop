@@ -20,7 +20,7 @@ function emitCartOpen(): void {
     </div>
     <ul class="flex items-center gap-6">
       <li
-        class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"
+        class="flex flex-shrink-0 items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"
         @click="emitCartOpen()"
       >
         <img src="/cart.svg" alt="Logo" /> {{ basketTotalPrice }} руб.
