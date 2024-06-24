@@ -5,7 +5,7 @@ export class Product {
     /**
      * ID of the product.
      */
-    public readonly id: string,
+    public readonly id: number,
 
     /**
      * Title.
@@ -26,17 +26,12 @@ export class Product {
      * Whether product is favorite.
      */
     public readonly isFavorite: boolean,
-
-    /**
-     * Whether product is in cart.
-     */
-    public readonly isInCart: boolean,
   ) {}
 }
 
 export const productSchema = z
   .object({
-    id: z.number().transform(String),
+    id: z.number(),
     imageUrl: z.string(),
     price: z.number(),
     title: z.string(),
@@ -44,12 +39,5 @@ export const productSchema = z
   })
   .transform(
     product =>
-      new Product(
-        product.id,
-        product.title,
-        product.price,
-        product.imageUrl,
-        product.favorite,
-        false,
-      ),
+      new Product(product.id, product.title, product.price, product.imageUrl, product.favorite),
   )

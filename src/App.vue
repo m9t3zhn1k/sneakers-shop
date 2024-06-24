@@ -10,28 +10,43 @@ import {
   ProductsIndexRequest,
   Drawer,
   ProductsToggleFavoriteRequest,
+  BasketService,
+  BasketUpdateRequest,
 } from '@shared'
 
 const productsService = new ProductsService()
+const basketService = new BasketService()
 const products: Ref<Product[]> = ref([])
+const basket: Ref<Product[]> = ref([])
+const basketTotalPrice: Ref<number> = ref(0)
 const filters = reactive({
   search: '',
   sortBy: 'title',
 })
 const isCartOpen = ref(false)
 
-onMounted(() =>
+onMounted(() => {
   productsService
     .index(convertToProductsIndexRequest())
     .then(response => (products.value = response))
-    .catch(console.log),
-)
+    .catch(console.log)
+
+  basketService
+    .show()
+    .then(response => (basket.value = response))
+    .catch(response => console.log(response.message))
+})
 
 watch(filters, () =>
   productsService
     .index(convertToProductsIndexRequest())
     .then(response => (products.value = response))
     .catch(console.log),
+)
+
+watch(
+  basket,
+  () => (basketTotalPrice.value = basket.value.reduce((acc, value) => (acc += value.price), 0)),
 )
 
 function onSearchChange(event: Event): void {
@@ -59,6 +74,22 @@ function toggleCartOpen(): void {
   isCartOpen.value = !isCartOpen.value
 }
 
+function updateBasket(product: Product): void {
+  const isProductInBasket = basket.value.find(item => item.id === product.id)
+  let products: Product[]
+
+  if (isProductInBasket) {
+    products = basket.value.filter(item => item.id !== product.id)
+  } else {
+    products = [...basket.value, product]
+  }
+
+  basketService
+    .update(convertToBasketUpdateRequest(products))
+    .then(response => (basket.value = response))
+    .catch(console.log)
+}
+
 function convertToProductsIndexRequest(): ProductsIndexRequest {
   return new ProductsIndexRequest({ search: filters.search, sortBy: filters.sortBy })
 }
@@ -67,7 +98,12 @@ function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggl
   return new ProductsToggleFavoriteRequest(product.id, !product.isFavorite)
 }
 
+function convertToBasketUpdateRequest(products: Product[]): BasketUpdateRequest {
+  return new BasketUpdateRequest(products)
+}
+
 provide('toggleCartOpen', toggleCartOpen)
+provide('basket', { basketTotalPrice, basket, updateBasket })
 </script>
 
 <template>
@@ -79,7 +115,11 @@ provide('toggleCartOpen', toggleCartOpen)
         <Input @input="onSearchChange" />
       </div>
     </div>
-    <ProductCardList :products="products" @toggle-favorite="toggleProductFavorite" />
+    <ProductCardList
+      :products="products"
+      @toggle-favorite="toggleProductFavorite"
+      @toggle-product-in-basket="updateBasket"
+    />
   </Shell>
 
   <Drawer v-if="isCartOpen">
@@ -89,33 +129,23 @@ provide('toggleCartOpen', toggleCartOpen)
     <template v-slot:content>
       <article
         class="flex items-center gap-3 border border-slate-100 bg-white rounded-2xl p-3 duration-300 hover:border-slate-200"
+        v-for="product in basket"
+        :key="product.id"
       >
         <img
           class="w-16 h-16 rounded-xl overflow-hidden shrink-0"
-          src="/sneakers/sneakers-1.jpg"
+          :src="product.preview"
           alt="Sneaker"
         />
         <div class="flex grow-1 flex-col gap-2">
-          <p>Мужские Кроссовки Nike Air Max 270</p>
-          <span class="font-semibold">12 999 руб.</span>
+          <p>{{ product.title }}</p>
+          <span class="font-semibold">{{ product.price }} руб.</span>
         </div>
-        <button class="h-8 w-8 shrink-0 opacity-45 duration-300 hover:opacity-100" type="button">
-          <img class="h-full w-full" src="/trash.svg" />
-        </button>
-      </article>
-      <article
-        class="flex items-center gap-3 border border-slate-100 bg-white rounded-2xl p-3 duration-300 hover:border-slate-200"
-      >
-        <img
-          class="w-16 h-16 rounded-xl overflow-hidden shrink-0"
-          src="/sneakers/sneakers-1.jpg"
-          alt="Sneaker"
-        />
-        <div class="flex grow-1 flex-col gap-2">
-          <p>Мужские Кроссовки Nike Air Max 270</p>
-          <span class="font-semibold">12 999 руб.</span>
-        </div>
-        <button class="h-8 w-8 shrink-0 opacity-45 duration-300 hover:opacity-100" type="button">
+        <button
+          class="h-8 w-8 shrink-0 opacity-45 duration-300 hover:opacity-100"
+          type="button"
+          @click.stop="updateBasket(product)"
+        >
           <img class="h-full w-full" src="/trash.svg" />
         </button>
       </article>
@@ -124,7 +154,7 @@ provide('toggleCartOpen', toggleCartOpen)
       <div class="flex gap-2">
         <span>Итого:</span>
         <div class="grow"></div>
-        <span class="font-semibold">12 999 руб.</span>
+        <span class="font-semibold">{{ basketTotalPrice }} руб.</span>
       </div>
       <button
         class="p-4 rounded-2xl text-sm text-white bg-lime-500 duration-300 hover:bg-lime-600 active:bg-lime-700 disabled:bg-slate-300"

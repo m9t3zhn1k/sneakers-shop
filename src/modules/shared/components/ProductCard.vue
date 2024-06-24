@@ -3,12 +3,17 @@ import { Product } from '../models'
 
 defineProps({
   product: Product,
+  isInBasket: Boolean,
 })
 
-const emits = defineEmits(['toggleFavorite'])
+const emits = defineEmits(['toggleFavorite', 'toggleProductInBasket'])
 
 function emitToggleFavorite(): void {
   emits('toggleFavorite')
+}
+
+function emitToggleProductInBasket(): void {
+  emits('toggleProductInBasket')
 }
 </script>
 
@@ -30,7 +35,11 @@ function emitToggleFavorite(): void {
         <span class="font-semibold">{{ product.price }} руб.</span>
       </div>
       <button>
-        <img :src="product.isInCart ? '/checked.svg' : '/plus.svg'" alt="Plus" />
+        <img
+          :src="isInBasket ? '/checked.svg' : '/plus.svg'"
+          alt="Plus"
+          @click.stop="emitToggleProductInBasket()"
+        />
       </button>
     </div>
   </article>
