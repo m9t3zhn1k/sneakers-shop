@@ -12,10 +12,13 @@ import {
   ProductsToggleFavoriteRequest,
   CartService,
   CartUpdateRequest,
+  OrdersService,
+  OrdersCreateRequest,
 } from '@shared'
 
 const productsService = new ProductsService()
 const cartService = new CartService()
+const ordersService = new OrdersService()
 const products: Ref<Product[]> = ref([])
 const cart: Ref<Product[]> = ref([])
 const cartTotalPrice: Ref<number> = ref(0)
@@ -24,8 +27,11 @@ const filters = reactive({
   sortBy: 'title',
 })
 const isCartOpen = ref(false)
+const isOrdersCreateLoading = ref(false)
 
-const cartSubmitButtonDisabled = computed<boolean>(() => !cartTotalPrice.value)
+const cartSubmitButtonDisabled = computed<boolean>(
+  () => !cartTotalPrice.value || isOrdersCreateLoading.value,
+)
 
 onMounted(() => {
   productsService
@@ -92,6 +98,19 @@ function updateCart(product: Product): void {
     .catch(console.log)
 }
 
+function createOrder(): void {
+  isOrdersCreateLoading.value = true
+
+  ordersService
+    .create(convertToOrdersCreateRequest(cart.value))
+    .then(() => {
+      cart.value = []
+      isCartOpen.value = false
+    })
+    .catch(error => console.log(error.message))
+    .finally(() => (isOrdersCreateLoading.value = false))
+}
+
 function convertToProductsIndexRequest(): ProductsIndexRequest {
   return new ProductsIndexRequest({ search: filters.search, sortBy: filters.sortBy })
 }
@@ -102,6 +121,10 @@ function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggl
 
 function convertToCartUpdateRequest(products: Product[]): CartUpdateRequest {
   return new CartUpdateRequest(products)
+}
+
+function convertToOrdersCreateRequest(products: Product[]): OrdersCreateRequest {
+  return new OrdersCreateRequest(products)
 }
 
 provide('toggleCartOpen', toggleCartOpen)
@@ -162,6 +185,7 @@ provide('cart', { cartTotalPrice, cart, updateCart })
         class="p-4 rounded-2xl text-sm text-white bg-lime-500 duration-300 hover:bg-lime-600 active:bg-lime-700 disabled:bg-slate-300"
         type="button"
         :disabled="cartSubmitButtonDisabled"
+        @click="createOrder()"
       >
         Оформить заказ
       </button>
