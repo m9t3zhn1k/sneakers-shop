@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { inject } from 'vue'
 
-const toggleCartOpen = inject<() => void>('toggleCartOpen', () => {})
+const { toggleCartOpen } = inject<{ toggleCartOpen: () => void }>('cart', {
+  toggleCartOpen: () => {},
+})
 </script>
 
 <template>

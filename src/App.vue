@@ -127,8 +127,7 @@ function convertToOrdersCreateRequest(products: Product[]): OrdersCreateRequest 
   return new OrdersCreateRequest(products)
 }
 
-provide('toggleCartOpen', toggleCartOpen)
-provide('cart', { cartTotalPrice, cart, updateCart })
+provide('cart', { cartTotalPrice, cart, updateCart, toggleCartOpen })
 </script>
 
 <template>

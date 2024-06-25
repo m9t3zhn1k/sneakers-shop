@@ -2,8 +2,10 @@
 import { Header } from './components'
 import { inject } from 'vue'
 
-const toggleCartOpen = inject<() => void>('toggleCartOpen', () => {})
-const { cartTotalPrice } = inject<{ cartTotalPrice: number }>('cart', { cartTotalPrice: 0 })
+const { cartTotalPrice, toggleCartOpen } = inject<{
+  cartTotalPrice: number
+  toggleCartOpen: () => void
+}>('cart', { cartTotalPrice: 0, toggleCartOpen: () => {} })
 </script>
 
 <template>
