@@ -23,7 +23,7 @@ function checkProductInCart(product: Product): boolean {
 </script>
 
 <template>
-  <div class="grid grid-cols-4 gap-3">
+  <div class="grid grid-cols-4 gap-3" v-auto-animate>
     <ProductCard
       v-for="product in products"
       :key="product.id"
