@@ -75,6 +75,7 @@ function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggl
   </div>
   <ProductCardList
     :products="products"
+    :show-actions="true"
     @toggle-favorite="toggleProductFavorite"
     @toggle-product-in-cart="updateCart"
   />

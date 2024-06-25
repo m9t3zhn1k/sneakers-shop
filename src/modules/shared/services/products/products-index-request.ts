@@ -3,8 +3,9 @@ export class ProductsIndexRequest {
 
   public getParams(): Record<string, unknown> {
     return {
-      title: this.options ? `*${this.options.search}*` : undefined,
+      title: this.options?.search ? `*${this.options.search}*` : undefined,
       sortBy: this.options?.sortBy ?? undefined,
+      favorite: this.options?.isFavorite,
     }
   }
 }
@@ -13,10 +14,15 @@ interface ProductsIndexRequestOptions {
   /**
    * Search query.
    */
-  readonly search: string
+  readonly search?: string
 
   /**
    * Sort by.
    */
-  readonly sortBy: string
+  readonly sortBy?: string
+
+  /**
+   * Whether product should be favorite.
+   */
+  readonly isFavorite?: boolean
 }

@@ -4,6 +4,7 @@ import { inject, ref, type Ref } from 'vue'
 
 defineProps({
   products: Array<Product>,
+  showActions: Boolean,
 })
 
 const emits = defineEmits(['toggleFavorite', 'toggleProductInCart'])
@@ -29,6 +30,7 @@ function checkProductInCart(product: Product): boolean {
       :key="product.id"
       :product="product"
       :is-in-cart="checkProductInCart(product)"
+      :show-actions="showActions"
       @toggle-favorite="emitToggleFavorite(product)"
       @toggle-product-in-cart="emitToggleProductInCart(product)"
     />

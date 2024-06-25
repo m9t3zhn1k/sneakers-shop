@@ -31,7 +31,7 @@ function emitCartOpen(): void {
         <li
           class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"
         >
-          <img src="/heart.svg" alt="Logo" /> Закладки.
+          <img src="/heart.svg" alt="Logo" /> Закладки
         </li>
       </router-link>
 
