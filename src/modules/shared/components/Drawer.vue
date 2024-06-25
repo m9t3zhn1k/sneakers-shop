@@ -23,7 +23,7 @@ const { toggleCartOpen } = inject<{ toggleCartOpen: () => void }>('cart', {
           <img class="h-full w-full" src="/close.svg" />
         </button>
       </div>
-      <div class="flex flex-col gap-3 flex-grow overflow-scroll">
+      <div class="flex flex-col gap-3 flex-grow overflow-scroll" v-auto-animate>
         <slot name="content"></slot>
       </div>
       <div class="flex flex-col gap-4">

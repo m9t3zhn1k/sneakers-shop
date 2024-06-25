@@ -175,14 +175,14 @@ provide('cart', { cartTotalPrice, cart, updateCart, toggleCartOpen })
         </button>
       </article>
       <!-- <InformationBlock
-        class="self-center"
+        class="self-center  my-auto"
         title="Заказ оформлен!"
         description="Ваш заказ находится в обработке и скоро будет передан в службу доставки"
         imageUrl="/order-success-icon.png"
       ></InformationBlock> -->
       <InformationBlock
         v-if="!cartTotalPrice"
-        class="self-center"
+        class="self-center my-auto"
         title="Корзина пуста"
         description="Для оформления заказа необходимо добавить хотя бы одну пару кроссовок"
         imageUrl="/package-icon.png"
