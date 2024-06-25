@@ -4,6 +4,7 @@ import Shell from '@/modules/shell/Shell.vue'
 import {
   Select,
   Input,
+  InformationBlock,
   ProductCardList,
   Product,
   ProductsService,
@@ -173,8 +174,30 @@ provide('cart', { cartTotalPrice, cart, updateCart, toggleCartOpen })
           <img class="h-full w-full" src="/trash.svg" />
         </button>
       </article>
+      <!-- <InformationBlock
+        class="self-center"
+        title="Заказ оформлен!"
+        description="Ваш заказ находится в обработке и скоро будет передан в службу доставки"
+        imageUrl="/order-success-icon.png"
+      ></InformationBlock> -->
+      <InformationBlock
+        v-if="!cartTotalPrice"
+        class="self-center"
+        title="Корзина пуста"
+        description="Для оформления заказа необходимо добавить хотя бы одну пару кроссовок"
+        imageUrl="/package-icon.png"
+      >
+        <template v-slot:actions>
+          <button
+            class="grow p-4 rounded-2xl text-sm text-white bg-lime-500 duration-300 hover:bg-lime-600 active:bg-lime-700 disabled:bg-slate-300"
+            type="button"
+          >
+            В каталог
+          </button>
+        </template>
+      </InformationBlock>
     </template>
-    <template v-slot:actions>
+    <template v-if="cartTotalPrice" v-slot:actions>
       <div class="flex gap-2">
         <span>Итого:</span>
         <div class="grow"></div>
