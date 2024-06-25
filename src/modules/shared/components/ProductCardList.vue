@@ -6,19 +6,19 @@ defineProps({
   products: Array<Product>,
 })
 
-const emits = defineEmits(['toggleFavorite', 'toggleProductInBasket'])
-const { basket } = inject<{ basket: Ref<Product[]> }>('basket', { basket: ref([]) })
+const emits = defineEmits(['toggleFavorite', 'toggleProductInCart'])
+const { cart } = inject<{ cart: Ref<Product[]> }>('cart', { cart: ref([]) })
 
 function emitToggleFavorite(product: Product): void {
   emits('toggleFavorite', product)
 }
 
-function emitToggleProductInBasket(product: Product): void {
-  emits('toggleProductInBasket', product)
+function emitToggleProductInCart(product: Product): void {
+  emits('toggleProductInCart', product)
 }
 
-function checkProductInBasket(product: Product): boolean {
-  return !!basket.value.find(item => item.id === product.id)
+function checkProductInCart(product: Product): boolean {
+  return !!cart.value.find(item => item.id === product.id)
 }
 </script>
 
@@ -28,9 +28,9 @@ function checkProductInBasket(product: Product): boolean {
       v-for="product in products"
       :key="product.id"
       :product="product"
-      :is-in-basket="checkProductInBasket(product)"
+      :is-in-cart="checkProductInCart(product)"
       @toggle-favorite="emitToggleFavorite(product)"
-      @toggle-product-in-basket="emitToggleProductInBasket(product)"
+      @toggle-product-in-cart="emitToggleProductInCart(product)"
     />
   </div>
 </template>

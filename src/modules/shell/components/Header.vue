@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps({
-  basketTotalPrice: Number,
+  cartTotalPrice: Number,
 })
 const emits = defineEmits(['cartOpen'])
 
@@ -23,7 +23,7 @@ function emitCartOpen(): void {
         class="flex flex-shrink-0 items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"
         @click="emitCartOpen()"
       >
-        <img src="/cart.svg" alt="Logo" /> {{ basketTotalPrice }} руб.
+        <img src="/cart.svg" alt="Logo" /> {{ cartTotalPrice }} руб.
       </li>
       <li
         class="flex items-center cursor-pointer gap-3 text-gray-500 font-normal duration-300 hover:text-black"

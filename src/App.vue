@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, type Ref, ref, watch, toRaw, provide } from 'vue'
+import { onMounted, reactive, type Ref, ref, watch, toRaw, provide, computed } from 'vue'
 import Shell from '@/modules/shell/Shell.vue'
 import {
   Select,
@@ -10,20 +10,22 @@ import {
   ProductsIndexRequest,
   Drawer,
   ProductsToggleFavoriteRequest,
-  BasketService,
-  BasketUpdateRequest,
+  CartService,
+  CartUpdateRequest,
 } from '@shared'
 
 const productsService = new ProductsService()
-const basketService = new BasketService()
+const cartService = new CartService()
 const products: Ref<Product[]> = ref([])
-const basket: Ref<Product[]> = ref([])
-const basketTotalPrice: Ref<number> = ref(0)
+const cart: Ref<Product[]> = ref([])
+const cartTotalPrice: Ref<number> = ref(0)
 const filters = reactive({
   search: '',
   sortBy: 'title',
 })
 const isCartOpen = ref(false)
+
+const cartSubmitButtonDisabled = computed<boolean>(() => !cartTotalPrice.value)
 
 onMounted(() => {
   productsService
@@ -31,9 +33,9 @@ onMounted(() => {
     .then(response => (products.value = response))
     .catch(console.log)
 
-  basketService
+  cartService
     .show()
-    .then(response => (basket.value = response))
+    .then(response => (cart.value = response))
     .catch(response => console.log(response.message))
 })
 
@@ -45,8 +47,8 @@ watch(filters, () =>
 )
 
 watch(
-  basket,
-  () => (basketTotalPrice.value = basket.value.reduce((acc, value) => (acc += value.price), 0)),
+  cart,
+  () => (cartTotalPrice.value = cart.value.reduce((acc, value) => (acc += value.price), 0)),
 )
 
 function onSearchChange(event: Event): void {
@@ -74,19 +76,19 @@ function toggleCartOpen(): void {
   isCartOpen.value = !isCartOpen.value
 }
 
-function updateBasket(product: Product): void {
-  const isProductInBasket = basket.value.find(item => item.id === product.id)
+function updateCart(product: Product): void {
+  const isProductInCart = cart.value.find(item => item.id === product.id)
   let products: Product[]
 
-  if (isProductInBasket) {
-    products = basket.value.filter(item => item.id !== product.id)
+  if (isProductInCart) {
+    products = cart.value.filter(item => item.id !== product.id)
   } else {
-    products = [...basket.value, product]
+    products = [...cart.value, product]
   }
 
-  basketService
-    .update(convertToBasketUpdateRequest(products))
-    .then(response => (basket.value = response))
+  cartService
+    .update(convertToCartUpdateRequest(products))
+    .then(response => (cart.value = response))
     .catch(console.log)
 }
 
@@ -98,12 +100,12 @@ function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggl
   return new ProductsToggleFavoriteRequest(product.id, !product.isFavorite)
 }
 
-function convertToBasketUpdateRequest(products: Product[]): BasketUpdateRequest {
-  return new BasketUpdateRequest(products)
+function convertToCartUpdateRequest(products: Product[]): CartUpdateRequest {
+  return new CartUpdateRequest(products)
 }
 
 provide('toggleCartOpen', toggleCartOpen)
-provide('basket', { basketTotalPrice, basket, updateBasket })
+provide('cart', { cartTotalPrice, cart, updateCart })
 </script>
 
 <template>
@@ -118,7 +120,7 @@ provide('basket', { basketTotalPrice, basket, updateBasket })
     <ProductCardList
       :products="products"
       @toggle-favorite="toggleProductFavorite"
-      @toggle-product-in-basket="updateBasket"
+      @toggle-product-in-cart="updateCart"
     />
   </Shell>
 
@@ -129,7 +131,7 @@ provide('basket', { basketTotalPrice, basket, updateBasket })
     <template v-slot:content>
       <article
         class="flex items-center gap-3 border border-slate-100 bg-white rounded-2xl p-3 duration-300 hover:border-slate-200"
-        v-for="product in basket"
+        v-for="product in cart"
         :key="product.id"
       >
         <img
@@ -144,7 +146,7 @@ provide('basket', { basketTotalPrice, basket, updateBasket })
         <button
           class="h-8 w-8 shrink-0 opacity-45 duration-300 hover:opacity-100"
           type="button"
-          @click.stop="updateBasket(product)"
+          @click.stop="updateCart(product)"
         >
           <img class="h-full w-full" src="/trash.svg" />
         </button>
@@ -154,11 +156,12 @@ provide('basket', { basketTotalPrice, basket, updateBasket })
       <div class="flex gap-2">
         <span>Итого:</span>
         <div class="grow"></div>
-        <span class="font-semibold">{{ basketTotalPrice }} руб.</span>
+        <span class="font-semibold">{{ cartTotalPrice }} руб.</span>
       </div>
       <button
         class="p-4 rounded-2xl text-sm text-white bg-lime-500 duration-300 hover:bg-lime-600 active:bg-lime-700 disabled:bg-slate-300"
         type="button"
+        :disabled="cartSubmitButtonDisabled"
       >
         Оформить заказ
       </button>

@@ -1,13 +1,13 @@
 import { Product, productSchema } from '@shared'
 import axios from 'axios'
 import { z } from 'zod'
-import { BasketUpdateRequest } from './basket-update-request'
+import { CartUpdateRequest } from './cart-update-request'
 
-export class BasketService {
+export class CartService {
   private readonly apiUrl = import.meta.env.VITE_BASE_URL
 
   /**
-   * Updates basket.
+   * Shows content of the cart.
    */
   public show(): Promise<Product[]> {
     return axios
@@ -16,9 +16,9 @@ export class BasketService {
   }
 
   /**
-   * Updates basket.
+   * Updates cart.
    */
-  public update(request: BasketUpdateRequest): Promise<Product[]> {
+  public update(request: CartUpdateRequest): Promise<Product[]> {
     const body = request.getBody()
 
     return axios

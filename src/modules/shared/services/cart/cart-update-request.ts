@@ -1,6 +1,6 @@
 import { Product } from '../../models'
 
-export class BasketUpdateRequest {
+export class CartUpdateRequest {
   constructor(
     /**
      * Products.
