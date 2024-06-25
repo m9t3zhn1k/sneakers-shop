@@ -1,32 +1,21 @@
 <script setup lang="ts">
-import { onMounted, reactive, type Ref, ref, watch, toRaw, provide, computed } from 'vue'
-import Shell from '@/modules/shell/Shell.vue'
+import { onMounted, type Ref, ref, watch, provide, computed } from 'vue'
+import { Shell } from '@/modules/shell'
 import {
-  Select,
-  Input,
   InformationBlock,
-  ProductCardList,
   Product,
-  ProductsService,
-  ProductsIndexRequest,
   Drawer,
-  ProductsToggleFavoriteRequest,
   CartService,
   CartUpdateRequest,
   OrdersService,
   OrdersCreateRequest,
 } from '@shared'
 
-const productsService = new ProductsService()
 const cartService = new CartService()
 const ordersService = new OrdersService()
-const products: Ref<Product[]> = ref([])
 const cart: Ref<Product[]> = ref([])
 const cartTotalPrice: Ref<number> = ref(0)
-const filters = reactive({
-  search: '',
-  sortBy: 'title',
-})
+
 const isCartOpen = ref(false)
 const isOrdersCreateLoading = ref(false)
 
@@ -34,50 +23,17 @@ const cartSubmitButtonDisabled = computed<boolean>(
   () => !cartTotalPrice.value || isOrdersCreateLoading.value,
 )
 
-onMounted(() => {
-  productsService
-    .index(convertToProductsIndexRequest())
-    .then(response => (products.value = response))
-    .catch(console.log)
-
+onMounted(() =>
   cartService
     .show()
     .then(response => (cart.value = response))
-    .catch(response => console.log(response.message))
-})
-
-watch(filters, () =>
-  productsService
-    .index(convertToProductsIndexRequest())
-    .then(response => (products.value = response))
-    .catch(console.log),
+    .catch(response => console.log(response.message)),
 )
 
 watch(
   cart,
   () => (cartTotalPrice.value = cart.value.reduce((acc, value) => (acc += value.price), 0)),
 )
-
-function onSearchChange(event: Event): void {
-  const value = (event.target as HTMLInputElement).value
-  filters.search = value
-}
-
-function onSortByChange(event: Event): void {
-  const value = (event.target as HTMLSelectElement).value
-  filters.sortBy = value
-}
-
-function toggleProductFavorite(product: Product): void {
-  productsService
-    .toggleFavorite(convertToProductsToggleFavoriteRequest(product))
-    .then(
-      response =>
-        (products.value = [
-          ...products.value.map(item => (item.id !== product.id ? item : response)),
-        ]),
-    )
-}
 
 function toggleCartOpen(): void {
   isCartOpen.value = !isCartOpen.value
@@ -112,14 +68,6 @@ function createOrder(): void {
     .finally(() => (isOrdersCreateLoading.value = false))
 }
 
-function convertToProductsIndexRequest(): ProductsIndexRequest {
-  return new ProductsIndexRequest({ search: filters.search, sortBy: filters.sortBy })
-}
-
-function convertToProductsToggleFavoriteRequest(product: Product): ProductsToggleFavoriteRequest {
-  return new ProductsToggleFavoriteRequest(product.id, !product.isFavorite)
-}
-
 function convertToCartUpdateRequest(products: Product[]): CartUpdateRequest {
   return new CartUpdateRequest(products)
 }
@@ -132,20 +80,7 @@ provide('cart', { cartTotalPrice, cart, updateCart, toggleCartOpen })
 </script>
 
 <template>
-  <Shell>
-    <div class="flex justify-between gap-4 items-center">
-      <h2 class="text-3xl font-bold">Все кроссовки</h2>
-      <div class="flex gap-3 items-center">
-        <Select @change="onSortByChange" />
-        <Input @input="onSearchChange" />
-      </div>
-    </div>
-    <ProductCardList
-      :products="products"
-      @toggle-favorite="toggleProductFavorite"
-      @toggle-product-in-cart="updateCart"
-    />
-  </Shell>
+  <Shell />
 
   <Drawer v-if="isCartOpen">
     <template v-slot:header>

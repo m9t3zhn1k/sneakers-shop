@@ -1,1 +1,1 @@
-export * from './Shell.vue'
+export { default as Shell } from './Shell.vue'
